@@ -4,12 +4,7 @@ import { spacing, colors, typography } from "../theme";
 
 export default function NivelFiltro ({etiqueta, activo, onPress}){
     return(
-        <Pressable onPress={onPress} style={({pressed})=>[
-                style.chip,
-                activo && style.chipActivo,
-                pressed && {opacity: 0.7}
-            ]}
-        >
+        <Pressable onPress={onPress} style={({pressed})=>[style.chip, activo && style.chipActivo, pressed && {opacity: 0.7}]}>
             <Text style={[style.texto, activo && style.textoActivo]}>{etiqueta}</Text>
         </Pressable>
     )
@@ -19,7 +14,7 @@ const style = StyleSheet.create({
   chip: {
     paddingVertical: spacing.sm,
     paddingHorizontal: spacing.lg,
-    borderRadius: radius.full,
+    borderRadius: 900,
     backgroundColor: colors.superficie,
     borderWidth: 1,
     borderColor: colors.borde,

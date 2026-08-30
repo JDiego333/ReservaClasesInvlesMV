@@ -1,7 +1,7 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ClasesScreens from "../screens/ClasesScreens";
-import { Color } from "react-native/types_generated/Libraries/Animated/AnimatedExports";
+import { colors } from "../theme";
 
 const Stack = createNativeStackNavigator();
 

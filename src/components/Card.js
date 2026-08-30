@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Image } from 'react-native';
 import EtiquetaNivel from './EtiquetaNivel';
 import { colors, spacing, typography } from '../theme';
-import {CLASES} from '../data/clases';
+import {CLASES} from '../data/Clases';
 
 export default function Card({clase, onPress}) {
     return (
