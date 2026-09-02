@@ -1,21 +1,26 @@
 import React, { useState } from "react";
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, ScrollView, TextInput, StyleSheet } from "react-native";
+import { UseSafeAreaInsets } from "react-native-safe-area-context";
+
 import { Ionicons } from "@expo/vector-icons";
+
+import { UseResponsive } from "../hooks/UseResponsive";
 import Card from "../components/Card";
 import NivelFiltro from "../components/NivelFiltro";
 import { spacing, colors, typography } from "../theme";
 import { CLASES, NIVELES } from "../data/Clases";
-import { ScrollView, TextInput } from "react-native";
+
 export default function ClasesScreens ({navigation}) {
+    const insets = UseSafeAreaInsets();
 
     const [nivel, setNivel] = useState('Todos');
     const [busqueda, setBusqueda] = useState('') 
 
     return (
-        <View>
-            <View>
-                <Text>Aplicacion de clases de ingles</Text>
-                <View>
+        <View style={[style.pantalla, { paddingTop: insets.top + spacing.md }]}>
+            <View style={{paddingHorizontal}}>
+                <Text style={typography.titulo}>Aplicacion de clases de ingles</Text>
+                <View style={style.buscador}>
                     <Ionicons name="search" size={18}/>
                     <TextInput placeholder="Buscar nivel..." value={nivel} onChangeText={setNivel} autoCorrect={false}/>
 
@@ -33,3 +38,19 @@ export default function ClasesScreens ({navigation}) {
     )
 }
 
+const style = StyleSheet.create({
+  pantalla: { flex: 1, backgroundColor: colors.fondo },
+  buscador: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    backgroundColor: colors.superficie,
+    borderRadius: radius.md,
+    paddingHorizontal: spacing.lg,
+    height: 46,
+    marginTop: spacing.lg,
+    borderWidth: 1,
+    borderColor: colors.borde,
+  },
+  input: { flex: 1, fontSize: 14, color: colors.texto, paddingVertical: 0 },
+});
