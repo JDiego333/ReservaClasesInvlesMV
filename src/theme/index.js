@@ -2,7 +2,7 @@ import { Platform } from 'react-native';
 
 export const colors = {
     fondo: '#f6f7f8',
-    primary: '#4f46e5',
+    primario: '#4f46e5',
     texto: '#111827',
     borde: '#e5e7eb',
 };
@@ -20,4 +20,8 @@ export const typography = {
     subtitulo: {fontSize: 18, fontWeight: '600', color: colors.texto},
 }
 
-export default {colors, spacing, typography};
+export const radius = {
+    md: 8,
+};
+
+export default {colors, spacing, typography, radius};

@@ -1,7 +1,7 @@
-import { UseWindowDimensions } from "react-native";
+import { useWindowDimensions } from "react-native";
 
 export default function UseResponsive() {
-    const { width, height } = UseWindowDimensions();
+    const { width, height } = useWindowDimensions();
 
     const isTablet = width >= 768;
     const isHorizontal = width > height;

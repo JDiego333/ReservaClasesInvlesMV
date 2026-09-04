@@ -8,7 +8,7 @@ const Stack = createNativeStackNavigator();
 export default function ClasesStack(){
     return(
         <Stack.Navigator>
-            <Stack.Screen name="Home" component={ClasesScreens} options={{headerShow: false}}/>
+            <Stack.Screen name="Home" component={ClasesScreens} options={{headerShown: false}}/>
         </Stack.Navigator>
     )
 }
