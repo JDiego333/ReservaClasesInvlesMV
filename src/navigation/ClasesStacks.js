@@ -9,6 +9,7 @@ export default function ClasesStack(){
     return(
         <Stack.Navigator>
             <Stack.Screen name="Home" component={ClasesScreens} options={{headerShown: false}}/>
+            <Stack.Screen name="DetallesClase" component={DetallesClaseScreen} options={{title: 'Detalle', headerBackTitle: 'Atrás' }}/>
         </Stack.Navigator>
     )
 }
