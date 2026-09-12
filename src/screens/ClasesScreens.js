@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Ionicons } from "@expo/vector-icons";
 
-import { UseResponsive } from "../hooks/UseResponsive";
+import UseResponsive from "../hooks/UseResponsive";
 import Card from "../components/Card";
 import NivelFiltro from "../components/NivelFiltro";
 import EstadoVacio from "../components/EstadoVacio";

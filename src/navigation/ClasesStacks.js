@@ -1,6 +1,7 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ClasesScreens from "../screens/ClasesScreens";
+import DetalleClaseScreen from "../screens/DetalleClaseScreen";
 import { colors } from "../theme";
 
 const Stack = createNativeStackNavigator();
