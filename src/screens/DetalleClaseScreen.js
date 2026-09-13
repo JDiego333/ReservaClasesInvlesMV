@@ -40,11 +40,27 @@ export default function DetalleClaseScreen({ route, navigation }) {
                   <Text style={styles.precio}>{formatPrecio(clase.precio)}</Text>
                 </View>
 
-                    //TAREA PENDIENTE
-                    //Duracion
-                    //Cupos
-                    //Horario
-                    //Boton realizar reserva
+                <View style={styles.duracion}>
+                  <Text style={styles.etiqueta}>DURACION</Text>
+                  <Text style={styles.duracionValor}>{clase.duracion}</Text>
+                </View>
+
+                <View style={styles.cupos}> 
+                  <Text style={styles.etiqueta}>CUPOS DISPONIBLES</Text>
+                  <Text style={styles.cuposValor}>{clase.cupos}</Text>
+                </View>
+
+                <View style={styles.horario}>
+                  <Text style={styles.etiqueta}>HORARIOS DISPONIBLES</Text>
+                  {clase.horarios.map((horario) => (
+                    <View key={horario}>
+                      <Text style={styles.horarioValor}>{horario}</Text>
+                    </View>
+                  ))}
+                </View>
+
+                    {/*TAREA PENDIENTE
+                    //Boton realizar reserva*/}
                     
             </ScrollView>
         </View>
