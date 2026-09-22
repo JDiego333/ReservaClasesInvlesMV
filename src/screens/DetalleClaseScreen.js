@@ -1,8 +1,8 @@
 import React, { useState, useMemo, useLayoutEffect } from "react";
-import { View, Text, FlatList, ScrollView, TextInput, StyleSheet, Image } from "react-native";
+import { View, Text, FlatList, ScrollView, TextInput, StyleSheet, Image, Alert, Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons"; 
-import UseResponsive from "../hooks/UseResponsive";
+import UseResponsive from "../hooks/useResponsive";
 import { colors, spacing, typography, radius } from "../theme";
 import { formatPrecio } from "../utils/formatPrecio";
 
@@ -11,15 +11,18 @@ export default function DetalleClaseScreen({ route, navigation }) {
     const insets = useSafeAreaInsets();
     const {clase} = route.params;
     const { isTable } = UseResponsive();
+    const [horarioSeleccionado, setHorarioSeleccionado] = useState(null);
+    const [reservaRealizada, setReservaRealizada] = useState(false);
+    const [cuposDisponibles, setCuposDisponibles] = useState(clase.cupos);
 
     useLayoutEffect(() => {
         navigation.setOptions({title: clase.titulo});
     },[navigation, clase.titulo]); 
 
     return (
-        <View style={[styles.pantalla]}>
-            <ScrollView contentContainerStyle={{paddingBottom: 120}} showVerticalScrollIndicator={false} >
-                <Image source={{ uri: clase.imagen }} style={[styles.portada, { height: isTable ? 300 : 200 }]} resizeMode="cover" />  
+        <View style={styles.pantalla}>
+          <ScrollView contentContainerStyle={styles.scrollContenido} showVerticalScrollIndicator={false}>
+            <Image source={{ uri: clase.imagen }} style={[styles.portada, { height: isTable ? 300 : 220 }]} resizeMode="cover" />
                 
                 <View style={styles.contenido}>
                   <Text style={typography.titulo}>{clase.titulo}</Text>
@@ -36,32 +39,64 @@ export default function DetalleClaseScreen({ route, navigation }) {
                     </View>
                   </View>
 
-                  <Text style={styles.etiqueta}>PRECIO</Text>
-                  <Text style={styles.precio}>{formatPrecio(clase.precio)}</Text>
-                </View>
-
-                <View style={styles.duracion}>
-                  <Text style={styles.etiqueta}>DURACION</Text>
-                  <Text style={styles.duracionValor}>{clase.duracion}</Text>
-                </View>
-
-                <View style={styles.cupos}> 
-                  <Text style={styles.etiqueta}>CUPOS DISPONIBLES</Text>
-                  <Text style={styles.cuposValor}>{clase.cupos}</Text>
-                </View>
-
-                <View style={styles.horario}>
-                  <Text style={styles.etiqueta}>HORARIOS DISPONIBLES</Text>
-                  {clase.horarios.map((horario) => (
-                    <View key={horario}>
-                      <Text style={styles.horarioValor}>{horario}</Text>
+                  <View style={styles.resumenPrecio}>
+                    <View>
+                      <Text style={styles.etiqueta}>PRECIO</Text>
+                      <Text style={styles.precio}>{formatPrecio(clase.precio)}</Text>
                     </View>
-                  ))}
+                    <View style={styles.nivelBadge}>
+                      <Text style={styles.nivelTexto}>{clase.nivel}</Text>
+                    </View>
+                  </View>
                 </View>
 
-                    {/*TAREA PENDIENTE
-                    //Boton realizar reserva*/}
-                    
+                <View style={styles.infoFila}>
+                  <View style={styles.infoItem}>
+                    <Text style={styles.etiqueta}>DURACION</Text>
+                    <Text style={styles.infoValor}>{clase.duracion} min</Text>
+                  </View>
+                  <View style={styles.infoItem}>
+                    <Text style={styles.etiqueta}>CUPOS DISPONIBLES</Text>
+                    <Text style={styles.infoValor}>{cuposDisponibles}</Text>
+                  </View>
+                </View>
+
+                <Text style={styles.seccionTitulo}>HORARIOS DISPONIBLES</Text>
+                {clase.horarios.map((horario) => (
+                  <Pressable key={horario} onPress={() => setHorarioSeleccionado(horario)} style={[
+                    styles.horario,
+                    horarioSeleccionado === horario && styles.horarioSeleccionado
+                  ]}>
+                    <Text style={[styles.horarioValor, horarioSeleccionado === horario && styles.horarioTextoSeleccionado]}>{horario}</Text>
+                  </Pressable>
+                ))}
+
+                <Pressable onPress={() => {
+                  if (cuposDisponibles <= 0) {
+                    Alert.alert("Sin cupos disponibles", "Esta clase ya no tiene cupos disponibles.");
+                    return;
+                  }
+
+                  if (!horarioSeleccionado) {
+                    Alert.alert("Selecciona un horario", "Por favor selecciona un horario antes de realizar la reserva.");
+                    return;
+                  }
+
+                  Alert.alert("Confirmar reserva", `¿Deseas realizar la reserva para el horario "${horarioSeleccionado}"?`, [
+                    {
+                      text: "Cancelar",
+                      style: "cancel"
+                    },
+                    {
+                      text: "Confirmar",
+                      onPress: () => {setReservaRealizada(true);
+                        setCuposDisponibles((cupos) => cupos - 1);
+                        Alert.alert("Reserva realizada con el horario " + horarioSeleccionado);
+                      }
+                    }
+                ]); }} style={styles.botonReserva}>
+                  <Text style={styles.boton}>Realizar Reserva</Text>
+                </Pressable>
             </ScrollView>
         </View>
     )
@@ -69,20 +104,21 @@ export default function DetalleClaseScreen({ route, navigation }) {
 
 const styles = StyleSheet.create({
   pantalla: { flex: 1, backgroundColor: colors.fondo },
-  portada: { width: '100%', backgroundColor: colors.primarioSuave },
-  contenido: { padding: spacing.lg },
+  scrollContenido: { paddingBottom: 36 },
+  portada: { width: '100%', backgroundColor: '#dfe3ff' },
+  contenido: { padding: spacing.lg, paddingTop: 24 },
   etiqueta: {
     color: colors.textoSuave,
     fontSize: 12,
     fontWeight: '700',
     letterSpacing: 0.5,
-    marginTop: spacing.xl,
+    marginTop: spacing.lg,
   },
   datos: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    backgroundColor: colors.superficie,
-    borderRadius: radius.lg,
+    backgroundColor: '#ffffff',
+    borderRadius: radius.md,
     paddingVertical: spacing.lg,
   },
   dato: { alignItems: 'center', gap: 2 },
@@ -91,26 +127,27 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.md,
-    backgroundColor: colors.superficie,
-    borderRadius: radius.lg,
+    backgroundColor: '#ffffff',
+    borderRadius: radius.md,
     padding: spacing.lg,
+    marginTop: spacing.sm,
   },
   avatar: { width: 48, height: 48, borderRadius: 24, backgroundColor: colors.borde },
   profesorNombre: { fontSize: 15, fontWeight: '700', color: colors.texto },
   profesorPais: { fontSize: 14, color: colors.textoSuave, marginTop: spacing.xs },
   descripcion: { ...typography.cuerpo, color: colors.textoSuave, lineHeight: 22, marginTop: spacing.sm },
-  barra: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.superficie,
-    borderTopWidth: 1,
-    borderTopColor: colors.borde,
-    paddingVertical: spacing.lg,
-    paddingTop: spacing.lg
-  },
-  precio: { fontSize: 18, fontWeight: '800', color: colors.primario },
+  resumenPrecio: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: spacing.sm },
+  precio: { fontSize: 20, fontWeight: '800', color: colors.primario, marginTop: spacing.xs },
+  nivelBadge: { backgroundColor: '#eef0ff', borderRadius: radius.md, paddingHorizontal: spacing.md, paddingVertical: spacing.sm },
+  nivelTexto: { color: colors.primario, fontSize: 12, fontWeight: '800' },
+  infoFila: { flexDirection: 'row', gap: spacing.md, paddingHorizontal: spacing.lg, marginTop: spacing.sm },
+  infoItem: { flex: 1, backgroundColor: '#ffffff', borderRadius: radius.md, padding: spacing.md },
+  infoValor: { color: colors.texto, fontSize: 18, fontWeight: '800', marginTop: spacing.xs },
+  seccionTitulo: { color: colors.texto, fontSize: 14, fontWeight: '800', marginHorizontal: spacing.lg, marginTop: 28, marginBottom: spacing.sm },
+  horario: { backgroundColor: '#ffffff', borderColor: colors.borde, borderWidth: 1, borderRadius: radius.md, padding: spacing.md, marginHorizontal: spacing.lg, marginVertical: spacing.xs },
+  horarioSeleccionado: { backgroundColor: colors.primario, borderColor: colors.primario },
+  horarioValor: { fontSize: 14, fontWeight: '600', color: colors.texto },
+  horarioTextoSeleccionado: { color: '#ffffff' },
+  botonReserva: { backgroundColor: colors.primario, padding: spacing.md, marginHorizontal: spacing.lg, marginTop: 24, borderRadius: radius.md, alignItems: 'center' },
+  boton: { fontSize: 16, fontWeight: '800', color: '#ffffff' },
 });
