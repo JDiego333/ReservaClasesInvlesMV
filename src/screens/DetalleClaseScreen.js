@@ -2,7 +2,7 @@ import React, { useState, useMemo, useLayoutEffect } from "react";
 import { View, Text, FlatList, ScrollView, TextInput, StyleSheet, Image, Alert, Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons"; 
-import UseResponsive from "../hooks/useResponsive";
+import UseResponsive from "../hooks/UseResponsive";
 import { colors, spacing, typography, radius } from "../theme";
 import { formatPrecio } from "../utils/formatPrecio";
 
